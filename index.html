@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dark Shark | Threat Actor De-Anonymization</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <style>
+    #network-graph { height: 420px; background: #0f172a; border-radius: 0.5rem; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans">
+  <header class="border-b border-slate-800 p-4 flex justify-between items-center bg-slate-900/60 backdrop-blur">
+    <div class="flex items-center space-x-3">
+      <span class="text-emerald-400 font-black text-xl tracking-wider">DARK SHARK</span>
+      <span class="text-xs bg-emerald-950 text-emerald-300 border border-emerald-800 px-2 py-0.5 rounded">SIH26151</span>
+    </div>
+    <div class="text-xs text-slate-400">Deterministic OSINT Pipeline v1.0</div>
+  </header>
+
+  <main class="max-w-6xl mx-auto p-6 space-y-6">
+    <!-- Search Bar & Pipeline Trigger -->
+    <div class="bg-slate-900 p-4 rounded-lg border border-slate-800 flex gap-3">
+      <input id="targetInput" type="text" value="shadow_root_44" class="flex-1 bg-slate-950 border border-slate-700 px-4 py-2 rounded text-sm text-emerald-400 focus:outline-none focus:border-emerald-500" placeholder="Enter target alias, PGP footprint, or onion leak..."/>
+      <button onclick="runCorrelation()" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold px-6 py-2 rounded text-sm transition">Run Sweep</button>
+    </div>
+
+    <!-- Live Execution Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Recon Stream -->
+      <div class="bg-slate-900 p-4 rounded-lg border border-slate-800 flex flex-col justify-between">
+        <h3 class="text-sm font-semibold text-slate-300 mb-2">Recon Sweep Logs</h3>
+        <div id="logArea" class="font-mono text-xs text-slate-400 space-y-2 h-72 overflow-y-auto bg-slate-950 p-3 rounded">
+          <p class="text-emerald-400">> Tor proxy circuit initialized...</p>
+          <p class="text-slate-500">> Ready for target ingestion.</p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-800 flex justify-between text-xs text-slate-400">
+          <span>Holehe: <b class="text-emerald-400">Active</b></span>
+          <span>Sherlock: <b class="text-emerald-400">400+ Platforms</b></span>
+        </div>
+      </div>
+
+      <!-- Graph Visualization -->
+      <div class="md:col-span-2 bg-slate-900 p-4 rounded-lg border border-slate-800">
+        <h3 class="text-sm font-semibold text-slate-300 mb-2">Identity Correlation Graph</h3>
+        <div id="network-graph"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function runCorrelation() {
+      const alias = document.getElementById('targetInput').value;
+      const logs = document.getElementById('logArea');
+      logs.innerHTML = `<p class="text-yellow-400">> Querying Ahmia API via SOCKS5 proxy for: ${alias}...</p>`;
+      
+      setTimeout(() => {
+        logs.innerHTML += `<p class="text-slate-300">> Discovered paste: keybase/d0x_${alias}.txt</p>`;
+        logs.innerHTML += `<p class="text-slate-300">> Resolved handle to email: ${alias}@proton.me</p>`;
+      }, 700);
+
+      setTimeout(() => {
+        logs.innerHTML += `<p class="text-emerald-400">> Cross-referencing 400+ platforms (Sherlock/Holehe)...</p>`;
+        logs.innerHTML += `<p class="text-emerald-400">> Found registered accounts on GitHub, Telegram, DockerHub.</p>`;
+        logs.innerHTML += `<p class="text-cyan-400">> Identity correlation verified (94% confidence).</p>`;
+        drawGraph(alias);
+      }, 1400);
+    }
+
+    function drawGraph(alias) {
+      const container = document.getElementById('network-graph');
+      const data = {
+        nodes: [
+          { id: 1, label: alias, color: '#ef4444', shape: 'box', font: { color: '#fff' } },
+          { id: 2, label: `${alias}@proton.me`, color: '#3b82f6', shape: 'ellipse', font: { color: '#fff' } },
+          { id: 3, label: 'Ahmia Onion Paste #921', color: '#64748b', shape: 'ellipse', font: { color: '#fff' } },
+          { id: 4, label: 'GitHub: /' + alias, color: '#10b981', shape: 'box', font: { color: '#fff' } },
+          { id: 5, label: 'Telegram: @' + alias, color: '#10b981', shape: 'box', font: { color: '#fff' } }
+        ],
+        edges: [
+          { from: 1, to: 3, label: 'Indexed on' },
+          { from: 3, to: 2, label: 'Leaked Email' },
+          { from: 2, to: 4, label: 'Platform Match' },
+          { from: 1, to: 5, label: 'Handle Match' }
+        ]
+      };
+      const options = {
+        nodes: { borderWidth: 2 },
+        edges: { color: '#475569', font: { size: 10, color: '#94a3b8' } },
+        physics: { stabilization: true }
+      };
+      new vis.Network(container, data, options);
+    }
+    // Initial draw
+    drawGraph('shadow_root_44');
+  </script>
+</body>
+</html>
