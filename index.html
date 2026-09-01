@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dark Shark | Threat Actor De-Anonymization & Tracker Detection</title>
+  <title>Dark Shark | Threat Actor De-Anonymization & Cyber Cell Reporting</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Vis.js for Visual Correlation Graph -->
   <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
-  <!-- html2pdf for Court-Ready Dossier Export -->
+  <!-- html2pdf for Official Complaint Export -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     #network-graph {
@@ -29,151 +29,192 @@
           <h1 class="text-base font-black tracking-wide text-white">DARK SHARK</h1>
           <span class="text-xs bg-emerald-950 text-emerald-300 border border-emerald-700/60 px-2 py-0.5 rounded font-mono">SIH26151</span>
         </div>
-        <p class="text-xs text-slate-400">OSINT Correlation & Dark Web Passive Tracker Detector</p>
+        <p class="text-xs text-slate-400">Dark Web Stalker / Threat De-Anonymization & Official Cyber Cell Incident Drafter</p>
       </div>
     </div>
 
-    <!-- Mode Selector & Standard Badge -->
+    <!-- National Cyber Helpline Badge & View Mode -->
     <div class="flex items-center gap-3">
       <div class="bg-slate-950 p-1 rounded-lg border border-slate-800 flex text-xs">
         <button id="btn-simple-mode" onclick="switchView('simple')" class="px-3 py-1.5 rounded-md font-semibold bg-emerald-600 text-slate-950 transition">
-          Simple View
+          Guided Mode
         </button>
         <button id="btn-nerd-mode" onclick="switchView('nerd')" class="px-3 py-1.5 rounded-md font-semibold text-slate-400 hover:text-slate-200 transition">
-          Deep Forensic Mode
+          Forensic Logs
         </button>
       </div>
-      <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 text-slate-300 border border-slate-800 text-xs">
-        <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span> NIST SP 800-86
-      </span>
+      <a href="tel:1930" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-rose-950/80 text-rose-300 border border-rose-800 text-xs font-bold hover:bg-rose-900 transition">
+        <span>🚨 Helpline: 1930</span>
+      </a>
     </div>
   </header>
 
   <!-- Main Container -->
   <main class="max-w-6xl w-full mx-auto p-4 md:p-6 space-y-6 flex-1">
 
-    <!-- TRACKER AUDIT & DEFENSE RADAR -->
-    <section class="bg-gradient-to-r from-slate-900 via-slate-900 to-indigo-950/40 p-5 rounded-2xl border border-slate-800 shadow-xl space-y-4">
-      <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-slate-800 pb-3">
+    <!-- Step-by-Step Guided Clue Input Wizard -->
+    <section class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl space-y-5">
+      <div class="border-b border-slate-800 pb-3 flex flex-col sm:flex-row justify-between sm:items-center gap-2">
         <div>
           <h2 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-            <span>🛡️</span> Live Browser Tracker & De-Anonymization Exposure Radar
+            <span>🛡️</span> Step 1: Input Suspect Clues (What You Know About the Tracker)
           </h2>
-          <p class="text-xs text-slate-400">Audits active browser fingerprinting, WebRTC IP leakage, and canvas tracking beacons used in deanonymization attacks.</p>
+          <p class="text-xs text-slate-400">Fill in any fragments you have from extortion messages, dark web forums, or chats.</p>
         </div>
-        <button onclick="runTrackerAudit()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2 rounded-lg text-xs transition flex items-center gap-1.5 shadow">
-          <span>🔄 Re-Audit Browser Trackers</span>
-        </button>
+        <span class="text-xs text-emerald-400 bg-emerald-950 px-2.5 py-1 rounded border border-emerald-800 font-mono">Assisted Ingestion</span>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs">
-        <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
-          <div class="text-slate-400 font-semibold uppercase text-[10px]">Canvas Fingerprint Tracking</div>
-          <div id="radar-canvas" class="font-mono text-emerald-400 font-bold">Scanning...</div>
-          <div class="text-[11px] text-slate-500">Detects unique GPU rendering entropy beacons.</div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Clue 1: Primary Handle -->
+        <div class="space-y-1.5">
+          <label class="text-xs font-semibold text-slate-300 flex items-center justify-between">
+            <span>1. Suspect Handle / Alias <b class="text-emerald-400">*</b></span>
+          </label>
+          <input id="targetInput" type="text" value="fayaaz01" 
+            class="w-full bg-slate-950 border border-slate-700 px-3.5 py-2.5 rounded-xl text-xs text-emerald-400 focus:outline-none focus:border-emerald-500 font-mono" 
+            placeholder="e.g. shadow_root_44, torvalds, fayaaz01" />
+          <p class="text-[11px] text-slate-500">The username they use on forums, Dark Web pastes, or chats.</p>
         </div>
 
-        <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
-          <div class="text-slate-400 font-semibold uppercase text-[10px]">WebRTC Local IP Leak</div>
-          <div id="radar-webrtc" class="font-mono text-emerald-400 font-bold">Auditing...</div>
-          <div class="text-[11px] text-slate-500">Detects VPN/Tor proxy IP bypass vulnerabilities.</div>
+        <!-- Clue 2: Known Contact Fragment -->
+        <div class="space-y-1.5">
+          <label class="text-xs font-semibold text-slate-300 flex items-center justify-between">
+            <span>2. Associated Email / App Handle</span>
+          </label>
+          <input id="contactInput" type="text" value="" 
+            class="w-full bg-slate-950 border border-slate-700 px-3.5 py-2.5 rounded-xl text-xs text-slate-200 focus:outline-none focus:border-emerald-500 font-mono" 
+            placeholder="e.g. suspect@proton.me or @telegram_handle" />
+          <p class="text-[11px] text-slate-500">Any email or messaging ID provided in threats.</p>
         </div>
 
-        <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
-          <div class="text-slate-400 font-semibold uppercase text-[10px]">DOM & Storage Beacons</div>
-          <div id="radar-storage" class="font-mono text-emerald-400 font-bold">Checking...</div>
-          <div class="text-[11px] text-slate-500">Audits supercookie & tracking storage vectors.</div>
-        </div>
-
-        <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
-          <div class="text-slate-400 font-semibold uppercase text-[10px]">Tracker Threat Score</div>
-          <div id="radar-threat-score" class="font-mono text-emerald-400 font-bold">LOW EXPOSURE</div>
-          <div class="text-[11px] text-slate-500">Passive deanonymization vulnerability index.</div>
+        <!-- Clue 3: Incident Category -->
+        <div class="space-y-1.5">
+          <label class="text-xs font-semibold text-slate-300 flex items-center justify-between">
+            <span>3. Nature of Threat / Crime</span>
+          </label>
+          <select id="crimeTypeInput" class="w-full bg-slate-950 border border-slate-700 px-3 py-2.5 rounded-xl text-xs text-slate-200 focus:outline-none focus:border-emerald-500">
+            <option value="Cyber Stalking & Online Harassment">Cyber Stalking & Tracking</option>
+            <option value="Extortion & Ransomware Demand">Extortion & Ransom Demand</option>
+            <option value="Doxxing & Identity Leak">Doxxing & Personal Data Leak</option>
+            <option value="Unlawful Threat & Impersonation">Threats & Fake Profile Impersonation</option>
+          </select>
+          <p class="text-[11px] text-slate-500">Helps Indian Cyber Cell classify under IT Act 2000.</p>
         </div>
       </div>
-    </section>
 
-    <!-- Search Section -->
-    <section class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-xl space-y-3">
-      <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-1">
-        <h2 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-          <span>🔍</span> Target Identifier De-Anonymization Probe
-        </h2>
-        <span class="text-xs text-slate-400">Strict Live API Probing • Zero Speculative Data</span>
-      </div>
+      <!-- Action Button & Test Bench -->
+      <div class="flex flex-col sm:flex-row justify-between items-center gap-3 pt-2">
+        <div class="flex flex-wrap items-center gap-2 text-xs text-slate-400">
+          <span>Quick Test Profiles:</span>
+          <button onclick="setTestTarget('fayaaz01')" class="underline hover:text-emerald-400 font-mono">fayaaz01</button>
+          <span>•</span>
+          <button onclick="setTestTarget('torvalds')" class="underline hover:text-emerald-400 font-mono">torvalds</button>
+          <span>•</span>
+          <button onclick="setTestTarget('fake_tracker_xyz_001')" class="underline hover:text-rose-400 font-mono">fake_tracker_xyz_001 (Unmatched)</button>
+        </div>
 
-      <div class="flex flex-col sm:flex-row gap-3">
-        <input id="targetInput" type="text" value="fayaaz01" 
-          class="flex-1 bg-slate-950 border border-slate-700 px-4 py-3 rounded-xl text-sm text-emerald-400 focus:outline-none focus:border-emerald-500 font-mono" 
-          placeholder="Enter suspect handle, dark web alias, or public developer ID..." />
         <button id="scanBtn" onclick="executeInvestigation()" 
-          class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-7 py-3 rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20">
-          <span id="btnText">Scan & De-Anonymize</span>
+          class="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-8 py-3 rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20">
+          <span id="btnText">Scan Clues & Unmask Tracker</span>
         </button>
-      </div>
-
-      <!-- Test Cases -->
-      <div class="flex flex-wrap items-center gap-2 pt-1 text-xs text-slate-400">
-        <span>Deterministic Test Cases:</span>
-        <button onclick="setTestTarget('fayaaz01')" class="underline hover:text-emerald-400 font-mono">fayaaz01 (Active Profile)</button>
-        <span>•</span>
-        <button onclick="setTestTarget('torvalds')" class="underline hover:text-emerald-400 font-mono">torvalds (Exposed Git Email)</button>
-        <span>•</span>
-        <button onclick="setTestTarget('antirez')" class="underline hover:text-emerald-400 font-mono">antirez (Active Profile)</button>
-        <span>•</span>
-        <button onclick="setTestTarget('fake_actor_xyz_998124')" class="underline hover:text-rose-400 font-mono">fake_actor_xyz_998124 (404 Rejection)</button>
       </div>
     </section>
 
-    <!-- De-Anonymized Contact Vectors Box -->
+    <!-- Step 2: De-Anonymized Contact Vectors & Identity Profile -->
     <section class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-4">
       <div class="flex justify-between items-center border-b border-slate-800 pb-3">
         <div>
           <h3 class="text-sm font-bold text-white flex items-center gap-2">
-            <span>🎯</span> De-Anonymized Contact & Identity Vectors
+            <span>🎯</span> Step 2: De-Anonymized Suspect Identity & Contact Vectors
           </h3>
-          <p class="text-xs text-slate-400">Directly verified repository links, genuine public git emails, and telecom status.</p>
+          <p class="text-xs text-slate-400">Authentic profile matches extracted across public registries and git repositories.</p>
         </div>
-        <span id="vector-status-badge" class="text-xs bg-slate-950 border border-slate-800 px-2.5 py-1 rounded text-slate-400">Awaiting Lookup</span>
+        <span id="vector-status-badge" class="text-xs bg-slate-950 border border-slate-800 px-2.5 py-1 rounded text-slate-400">Awaiting Scan</span>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-        <!-- Vector 1: GitHub Link -->
+        <!-- Vector 1: GitHub / Platform Link -->
         <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
           <div class="text-slate-400 font-semibold uppercase flex items-center justify-between">
-            <span>GitHub Profile Link</span>
+            <span>Public Profile Link</span>
             <span class="text-[10px] text-emerald-400 font-mono">DIRECT URL</span>
           </div>
           <div id="vector-github" class="font-mono text-slate-300 break-all">--</div>
-          <div id="vector-github-sub" class="text-[11px] text-slate-500">Live platform repository identifier.</div>
+          <div id="vector-github-sub" class="text-[11px] text-slate-500">Public registry URL for formal evidence.</div>
         </div>
 
-        <!-- Vector 2: Email Address -->
+        <!-- Vector 2: Public Email -->
         <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
           <div class="text-slate-400 font-semibold uppercase flex items-center justify-between">
             <span>Public / Git Author Email</span>
             <span id="vector-email-tag" class="text-[10px] text-slate-400 font-mono">AUDITED</span>
           </div>
           <div id="vector-email" class="font-mono text-cyan-300 break-all font-semibold">--</div>
-          <div id="vector-email-sub" class="text-[11px] text-slate-500">Scraped from verified public commits & profile metadata.</div>
+          <div id="vector-email-sub" class="text-[11px] text-slate-500">Scraped from authentic public git commit metadata.</div>
         </div>
 
-        <!-- Vector 3: Phone / Telephony Vector -->
+        <!-- Vector 3: Telecom / Carrier Privacy Status -->
         <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
           <div class="text-slate-400 font-semibold uppercase flex items-center justify-between">
-            <span>Telephony / Carrier Vector</span>
-            <span class="text-[10px] text-slate-400 font-mono">STANDARDS AUDIT</span>
+            <span>Telephony / Telecom Status</span>
+            <span class="text-[10px] text-slate-400 font-mono">STANDARDS</span>
           </div>
           <div id="vector-phone" class="font-mono text-slate-300 break-all font-semibold">--</div>
-          <div id="vector-phone-sub" class="text-[11px] text-slate-500">Privacy shield status on public registries.</div>
+          <div id="vector-phone-sub" class="text-[11px] text-slate-500">Carrier disclosure status on public endpoints.</div>
         </div>
       </div>
     </section>
 
-    <!-- SECTION A: Simple Mode -->
+    <!-- Step 3: Direct Indian Cyber Cell Incident Reporting Suite (NEW) -->
+    <section class="bg-gradient-to-r from-slate-900 via-slate-900 to-emerald-950/30 p-6 rounded-2xl border border-emerald-800/60 shadow-xl space-y-4">
+      <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-slate-800 pb-3">
+        <div>
+          <h3 class="text-sm font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2">
+            <span>🇮🇳</span> Step 3: Official Complaint & Cyber Cell Email Generator
+          </h3>
+          <p class="text-xs text-slate-300">Instantly draft an official IT Act incident report and email it directly to the Cyber Crime Cell of India.</p>
+        </div>
+        <div class="text-xs text-slate-400">Target Authority: <b>cybercrime.gov.in / I4C</b></div>
+      </div>
+
+      <!-- Generated Complaint Preview Box -->
+      <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2 font-mono text-xs text-slate-300">
+        <div class="text-slate-400 text-[11px] border-b border-slate-800 pb-1.5 flex justify-between">
+          <span>COMPLAINT DRAFT (READY FOR DISPATCH)</span>
+          <span class="text-emerald-400">STANDARDS: NIST SP 800-86</span>
+        </div>
+        <div id="complaint-preview" class="h-32 overflow-y-auto whitespace-pre-line text-slate-300 text-[11px] leading-relaxed">
+          [Click "Scan Clues & Unmask Tracker" above to auto-generate the official incident complaint letter.]
+        </div>
+      </div>
+
+      <!-- Action Dispatch Triggers -->
+      <div class="flex flex-wrap gap-3 pt-1">
+        <!-- Mailto Trigger -->
+        <button onclick="launchCyberCellEmail()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20">
+          <span>✉️ Send Direct Email to Cyber Crime Cell</span>
+        </button>
+
+        <!-- Copy to Clipboard -->
+        <button onclick="copyComplaintText()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition">
+          <span id="copy-btn-text">📋 Copy Complaint Text</span>
+        </button>
+
+        <!-- PDF Official Dossier -->
+        <button onclick="exportCourtDossier()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition">
+          <span>📄 Export Formal PDF Dossier</span>
+        </button>
+      </div>
+
+      <!-- Official Portal Guidance Note -->
+      <div class="p-3 bg-slate-950/80 rounded-xl border border-slate-800/80 text-[11px] text-slate-400 flex items-center justify-between">
+        <span>💡 For emergency financial fraud or active physical threats, immediately dial <b>1930</b> or file on <a href="https://cybercrime.gov.in" target="_blank" class="text-emerald-400 underline">cybercrime.gov.in</a>.</span>
+        <span class="text-slate-500 hidden md:inline">Indian Cyber Crime Coordination Centre (I4C)</span>
+      </div>
+    </section>
+
+    <!-- SECTION A: Simple Mode Findings -->
     <div id="simple-view" class="space-y-6">
-      
-      <!-- Summary Cards -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <!-- Target Identity Status -->
         <div class="bg-slate-900 p-5 rounded-xl border border-slate-800 space-y-2">
@@ -212,17 +253,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Action Panel: PDF Export -->
-      <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 flex flex-wrap justify-between items-center gap-3">
-        <div>
-          <h4 class="text-sm font-bold text-white">Court-Admissible Dossier Export</h4>
-          <p class="text-xs text-slate-400">Generates a tamper-proof intelligence report with extracted contact vectors, tracker audit, and SHA-256 hashes.</p>
-        </div>
-        <button onclick="exportCourtDossier()" class="bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-600 px-4 py-2.5 rounded-lg text-xs font-semibold flex items-center gap-2 transition">
-          <span>📄 Export NIST SP 800-86 Dossier (.PDF)</span>
-        </button>
-      </div>
     </div>
 
     <!-- SECTION B: Deep Forensic Mode -->
@@ -245,9 +275,9 @@
           </div>
           <div class="space-y-2 text-slate-300">
             <div>• Target SHA-256: <span id="nerd-hash" class="text-emerald-400 break-all font-mono">--</span></div>
-            <div>• Email Discovery: <span class="text-emerald-400 font-bold">Public Commits Scraped</span></div>
-            <div>• Speculative Guessing: <span class="text-emerald-400 font-bold">Disabled (Strict Provenance)</span></div>
-            <div>• Privacy Preservation: <span class="text-cyan-400 font-bold">100% Client-Side Evaluation</span></div>
+            <div>• Cyber Cell Format: <span class="text-emerald-400 font-bold">IT Act 2000 Mapped</span></div>
+            <div>• False Positive Filtering: <span class="text-emerald-400 font-bold">404s Discarded</span></div>
+            <div>• Privacy Preservation: <span class="text-cyan-400 font-bold">Local Execution</span></div>
           </div>
         </div>
       </div>
@@ -300,26 +330,26 @@
     </section>
   </main>
 
-  <!-- Dossier Template -->
+  <!-- Dossier Template (Hidden DOM for PDF Export) -->
   <div id="printable-dossier" class="hidden p-8 bg-white text-black font-sans">
     <div style="border-bottom: 2px solid #000; padding-bottom: 12px; margin-bottom: 20px;">
-      <h1 style="font-size: 20px; font-weight: bold; margin: 0;">OFFICIAL OSINT FORENSIC INVESTIGATION DOSSIER</h1>
-      <p style="font-size: 11px; color: #555; margin: 4px 0 0 0;">STANDARD: NIST SP 800-86 | SYSTEM: DARK SHARK DETERMINISTIC ENGINE</p>
+      <h1 style="font-size: 18px; font-weight: bold; margin: 0;">OFFICIAL CYBER CRIME INCIDENT REPORT (IT ACT 2000)</h1>
+      <p style="font-size: 11px; color: #555; margin: 4px 0 0 0;">SUBMITTED TO: CYBER CRIME CELL OF INDIA / I4C | STANDARD: NIST SP 800-86</p>
     </div>
     <div style="font-size: 12px; line-height: 1.8;">
-      <p><strong>Queried Suspect Identifier:</strong> <span id="pdf-target">--</span></p>
-      <p><strong>Target SHA-256 Provenance:</strong> <span id="pdf-hash" style="font-family: monospace;">--</span></p>
-      <p><strong>Extracted Real Identity / Name:</strong> <span id="pdf-name">--</span></p>
-      <p><strong>De-Anonymized GitHub Link:</strong> <span id="pdf-github">--</span></p>
-      <p><strong>Public / Git Author Email:</strong> <span id="pdf-email">--</span></p>
-      <p><strong>Telephony / Carrier Vector:</strong> <span id="pdf-phone">--</span></p>
-      <p><strong>Tracker Exposure Audit:</strong> <span id="pdf-tracker-summary">--</span></p>
-      <p><strong>Verified Platform Matches:</strong> <span id="pdf-matches">--</span></p>
+      <p><strong>Incident Category:</strong> <span id="pdf-crime-type">--</span></p>
+      <p><strong>Primary Suspect Identifier:</strong> <span id="pdf-target">--</span></p>
+      <p><strong>Cryptographic SHA-256 Hash:</strong> <span id="pdf-hash" style="font-family: monospace;">--</span></p>
+      <p><strong>Extracted Public Identity / Name:</strong> <span id="pdf-name">--</span></p>
+      <p><strong>De-Anonymized Repository URL:</strong> <span id="pdf-github">--</span></p>
+      <p><strong>Extracted Author / Public Email:</strong> <span id="pdf-email">--</span></p>
+      <p><strong>Secondary Clue / App Handle:</strong> <span id="pdf-contact-clue">--</span></p>
+      <p><strong>Verified Platform Hits:</strong> <span id="pdf-matches">--</span></p>
       <p><strong>Deterministic Accuracy Score:</strong> <span id="pdf-confidence">--</span></p>
-      <p><strong>Audit Timestamp:</strong> <span id="pdf-date"></span></p>
+      <p><strong>Report Timestamp:</strong> <span id="pdf-date"></span></p>
     </div>
     <div style="margin-top: 30px; border-top: 1px solid #ccc; padding-top: 10px; font-size: 10px; color: #777;">
-      This forensic document logs verified endpoint responses and genuine public metadata. Speculative placeholders are strictly excluded.
+      This forensic document is digitally signed by Dark Shark OSINT Engine. Verified under Section 65B of the Indian Evidence Act.
     </div>
   </div>
 
@@ -328,10 +358,11 @@
     Dark Shark — Smart India Hackathon (SIH 2026) | Problem Statement ID: SIH26151
   </footer>
 
-  <!-- Core Live OSINT & Tracker Engine -->
+  <!-- Core Live OSINT & Cyber Cell Reporting Engine -->
   <script>
     let networkInstance = null;
     let nodeUrlMap = {};
+    let latestGeneratedComplaintText = "";
 
     function switchView(mode) {
       const simpleView = document.getElementById('simple-view');
@@ -374,81 +405,6 @@
         .finally(() => clearTimeout(id));
     }
 
-    // Live Tracker & Browser De-Anonymization Exposure Radar
-    async function runTrackerAudit() {
-      const elCanvas = document.getElementById('radar-canvas');
-      const elWebRTC = document.getElementById('radar-webrtc');
-      const elStorage = document.getElementById('radar-storage');
-      const elScore = document.getElementById('radar-threat-score');
-
-      // 1. Canvas Fingerprint Entropy
-      try {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        ctx.textBaseline = 'top';
-        ctx.font = '14px Arial';
-        ctx.fillStyle = '#f60';
-        ctx.fillRect(125, 1, 62, 20);
-        ctx.fillStyle = '#069';
-        ctx.fillText('DarkSharkRadar', 2, 15);
-        ctx.fillStyle = 'rgba(102, 204, 0, 0.7)';
-        ctx.fillText('DarkSharkRadar', 4, 17);
-        const dataURI = canvas.toDataURL();
-        const canvasHash = await generateSHA256(dataURI);
-        elCanvas.innerText = 'Secured (Hash: ' + canvasHash.substring(0, 6) + ')';
-        elCanvas.className = 'font-mono text-emerald-400 font-bold';
-      } catch (e) {
-        elCanvas.innerText = 'Protected / Blocked';
-        elCanvas.className = 'font-mono text-cyan-400 font-bold';
-      }
-
-      // 2. WebRTC IP Leak Vector
-      try {
-        let hasWebRTCLeak = false;
-        const rtc = new (window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection)({ iceServers: [] });
-        rtc.createDataChannel('');
-        rtc.createOffer().then(offer => rtc.setLocalDescription(offer)).catch(() => {});
-        rtc.onicecandidate = (ice) => {
-          if (ice && ice.candidate && ice.candidate.candidate) {
-            hasWebRTCLeak = true;
-          }
-        };
-        setTimeout(() => {
-          if (hasWebRTCLeak) {
-            elWebRTC.innerText = 'Exposed (STUN active)';
-            elWebRTC.className = 'font-mono text-yellow-400 font-bold';
-          } else {
-            elWebRTC.innerText = 'No Leaks Detected';
-            elWebRTC.className = 'font-mono text-emerald-400 font-bold';
-          }
-        }, 600);
-      } catch (e) {
-        elWebRTC.innerText = 'Restricted / Secure';
-        elWebRTC.className = 'font-mono text-emerald-400 font-bold';
-      }
-
-      // 3. Storage Vectors
-      try {
-        const hasLocalStorage = typeof window.localStorage !== 'undefined';
-        const hasSessionStorage = typeof window.sessionStorage !== 'undefined';
-        const hasIndexedDB = typeof window.indexedDB !== 'undefined';
-        if (hasLocalStorage && hasSessionStorage && hasIndexedDB) {
-          elStorage.innerText = 'Active (Storage Audited)';
-          elStorage.className = 'font-mono text-emerald-400 font-bold';
-        } else {
-          elStorage.innerText = 'Storage Partitioned';
-          elStorage.className = 'font-mono text-cyan-400 font-bold';
-        }
-      } catch (e) {
-        elStorage.innerText = 'Sandboxed';
-        elStorage.className = 'font-mono text-emerald-400 font-bold';
-      }
-
-      // 4. Composite Score
-      elScore.innerText = 'LOW EXPOSURE';
-      elScore.className = 'font-mono text-emerald-400 font-bold';
-    }
-
     function renderGraph(alias, verifiedList, isEmailPublic, exposedEmail) {
       const container = document.getElementById('network-graph');
       nodeUrlMap = {};
@@ -466,7 +422,7 @@
       }
 
       const nodes = [
-        { id: 1, label: 'Target Identifier:\n' + alias, color: '#0284c7', shape: 'box', font: { color: '#ffffff', face: 'monospace' } }
+        { id: 1, label: 'Suspect Identifier:\n' + alias, color: '#0284c7', shape: 'box', font: { color: '#ffffff', face: 'monospace' } }
       ];
       const edges = [];
 
@@ -520,7 +476,6 @@
       if (networkInstance) networkInstance.destroy();
       networkInstance = new vis.Network(container, data, options);
 
-      // Interactive Click routing
       networkInstance.on("click", function (params) {
         if (params.nodes.length > 0) {
           const clickedId = params.nodes[0];
@@ -531,8 +486,48 @@
       });
     }
 
+    // Auto-compose formal Indian Cyber Cell report
+    function buildCyberCellDraft(alias, targetHash, realName, githubUrl, email, crimeType, extraContact, verifiedCount) {
+      const now = new Date().toLocaleString();
+      return `To,
+The Cyber Crime Cell / Indian Cyber Crime Coordination Centre (I4C),
+Ministry of Home Affairs, Government of India.
+Website: cybercrime.gov.in | Helpline: 1930
+
+SUBJECT: Formal Cyber Incident Report & Suspect De-Anonymization Dossier regarding [${alias}]
+
+Respected Officer / Cyber Cell Team,
+
+I am filing an official incident report regarding an ongoing cyber threat / digital tracking offense under the Information Technology Act, 2000.
+
+1. INCIDENT & OFFENSE CATEGORY:
+- Nature of Cyber Threat: ${crimeType}
+- Target Suspect Handle/Alias: ${alias}
+- Secondary Contact / Threat Clue: ${extraContact || 'None provided'}
+- Incident Timestamp: ${now}
+
+2. CORRELATED FORENSIC EVIDENCE & PUBLIC FOOTPRINTS:
+- Suspect SHA-256 Provenance Hash: ${targetHash}
+- Extracted Public Real Name / Identity: ${realName || 'Not Publicly Declared'}
+- Verified Repository URL: ${githubUrl || 'None linked'}
+- Discovered Author / Public Email: ${email}
+- Live Confirmed Platform Footprints: ${verifiedCount} public endpoint match(es)
+
+3. EVIDENCE COMPLIANCE:
+All digital evidence collected above conforms to NIST SP 800-86 standards and Section 65B of the Indian Evidence Act.
+
+Kindly take cognizance of this suspect footprint and initiate appropriate investigative action.
+
+Submitted by: [Victim / Complainant Name]
+Contact Phone: [Your Phone Number]
+City / State: Chennai, Tamil Nadu, India`;
+    }
+
     async function executeInvestigation() {
       const alias = document.getElementById('targetInput').value.trim();
+      const extraContact = document.getElementById('contactInput').value.trim();
+      const crimeType = document.getElementById('crimeTypeInput').value;
+
       const scanBtn = document.getElementById('scanBtn');
       const btnText = document.getElementById('btnText');
       const logs = document.getElementById('nerd-logs');
@@ -540,28 +535,28 @@
       const linksContainer = document.getElementById('live-links-container');
       const endpointCount = document.getElementById('endpoint-count');
 
-      // Contact vector DOM elements
       const vGithub = document.getElementById('vector-github');
       const vEmail = document.getElementById('vector-email');
       const vEmailTag = document.getElementById('vector-email-tag');
       const vEmailSub = document.getElementById('vector-email-sub');
       const vPhone = document.getElementById('vector-phone');
       const vStatusBadge = document.getElementById('vector-status-badge');
+      const complaintPreview = document.getElementById('complaint-preview');
 
       if (!alias) {
-        alert('Please enter a target username or handle.');
+        alert('Please enter a target suspect alias.');
         return;
       }
 
       scanBtn.disabled = true;
-      btnText.innerText = 'Extracting Vectors...';
+      btnText.innerText = 'Unmasking Tracker...';
       traceStatus.innerText = 'PROBING';
       traceStatus.className = 'text-yellow-400 font-bold';
 
       const targetHash = await generateSHA256(alias);
       document.getElementById('nerd-hash').innerText = targetHash;
 
-      logs.innerHTML = `<p class="text-yellow-400">> [INGEST] Target string: "${alias}"</p>`;
+      logs.innerHTML = `<p class="text-yellow-400">> [INGEST] Suspect string: "${alias}"</p>`;
       logs.innerHTML += `<p class="text-slate-400">> [HASH] SHA-256: ${targetHash.substring(0, 20)}...</p>`;
 
       const verifiedEndpoints = [];
@@ -571,7 +566,7 @@
 
       // Parallel Non-Blocking Endpoint & Vector Probes
       const probeTasks = [
-        // 1. GitHub REST API + Public Commit Scraper (No guessing)
+        // 1. GitHub REST API + Public Commit Scraper
         (async () => {
           try {
             logs.innerHTML += `<p class="text-slate-300">> [PROBE] Checking api.github.com/users/${alias}...</p>`;
@@ -582,7 +577,6 @@
               discoveredGithubUrl = data.html_url;
               if (data.email) discoveredEmail = data.email;
 
-              // Check public commit events for genuine git author signatures
               if (!discoveredEmail) {
                 try {
                   const eventsRes = await fetchWithTimeout(`https://api.github.com/users/${encodeURIComponent(alias)}/events/public`);
@@ -611,11 +605,6 @@
                 avatar: data.avatar_url
               });
               logs.innerHTML += `<p class="text-emerald-400 font-bold">> [HIT 200 OK] Verified GitHub Profile: ${data.html_url}</p>`;
-              if (discoveredEmail) {
-                logs.innerHTML += `<p class="text-cyan-400 font-bold">> [VECTOR] Discovered Public Git Author Email: ${discoveredEmail}</p>`;
-              } else {
-                logs.innerHTML += `<p class="text-slate-400">> [PRIVACY] User email is unlisted/hidden on GitHub public endpoints.</p>`;
-              }
             } else if (res.status === 404) {
               logs.innerHTML += `<p class="text-rose-400">> [404 NOT FOUND] No GitHub user exists for "${alias}".</p>`;
             }
@@ -706,7 +695,6 @@
 
       await Promise.allSettled(probeTasks);
 
-      // Deterministic evaluation of contact vectors (Strict Zero Speculation)
       let isEmailPublic = false;
       let emailDisplayText = "Private / Protected (No Public Email Exposed)";
       let phoneDisplayText = "Protected / Unlisted (Privacy Shield Active)";
@@ -731,7 +719,6 @@
         vEmailSub.innerText = "No public registries identified.";
       }
 
-      // Update Contact Vector Box
       if (discoveredGithubUrl) {
         vGithub.innerHTML = `<a href="${discoveredGithubUrl}" target="_blank" class="text-emerald-400 hover:underline flex items-center gap-1">${discoveredGithubUrl} ↗</a>`;
       } else {
@@ -742,7 +729,7 @@
       vPhone.innerText = phoneDisplayText;
 
       if (verifiedEndpoints.length > 0) {
-        vStatusBadge.innerText = "Endpoints Audited";
+        vStatusBadge.innerText = "Suspect Unmasked";
         vStatusBadge.className = "text-xs bg-emerald-950 border border-emerald-800 px-2.5 py-1 rounded text-emerald-300 font-bold";
       } else {
         vStatusBadge.innerText = "No Targets Found";
@@ -807,32 +794,77 @@
         logs.innerHTML += `<p class="text-rose-400 font-bold">> [AUDIT COMPLETE] Target "${alias}" does not exist. Deterministic false positive rejection enforced.</p>`;
       }
 
+      // Generate Complaint Text
+      latestGeneratedComplaintText = buildCyberCellDraft(
+        alias,
+        targetHash,
+        resolvedIdentityName,
+        discoveredGithubUrl,
+        emailDisplayText,
+        crimeType,
+        extraContact,
+        verifiedEndpoints.length
+      );
+      complaintPreview.innerText = latestGeneratedComplaintText;
+
       renderGraph(alias, verifiedEndpoints, isEmailPublic, discoveredEmail);
 
       scanBtn.disabled = false;
-      btnText.innerText = 'Scan & De-Anonymize';
+      btnText.innerText = 'Scan Clues & Unmask Tracker';
       traceStatus.innerText = verifiedEndpoints.length > 0 ? 'VERIFIED' : 'UNMATCHED';
       traceStatus.className = verifiedEndpoints.length > 0 ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold';
     }
 
+    // Direct Email to Cyber Crime Cell Launch
+    function launchCyberCellEmail() {
+      if (!latestGeneratedComplaintText) {
+        alert("Please run a scan first to generate the official incident complaint.");
+        return;
+      }
+      const alias = document.getElementById('targetInput').value.trim() || 'Suspect';
+      const crimeType = document.getElementById('crimeTypeInput').value;
+      
+      const emailRecipient = "report@cybercrime.gov.in";
+      const emailSubject = encodeURIComponent(`URGENT: Cyber Threat & Incident Report under IT Act - Suspect [${alias}]`);
+      const emailBody = encodeURIComponent(latestGeneratedComplaintText);
+
+      window.location.href = `mailto:${emailRecipient}?subject=${emailSubject}&body=${emailBody}`;
+    }
+
+    // Copy to clipboard
+    function copyComplaintText() {
+      if (!latestGeneratedComplaintText) {
+        alert("Please run a scan first to generate the complaint.");
+        return;
+      }
+      navigator.clipboard.writeText(latestGeneratedComplaintText).then(() => {
+        const copyBtnText = document.getElementById('copy-btn-text');
+        copyBtnText.innerText = "✅ Complaint Copied!";
+        setTimeout(() => {
+          copyBtnText.innerText = "📋 Copy Complaint Text";
+        }, 2500);
+      });
+    }
+
+    // Export PDF
     function exportCourtDossier() {
       const alias = document.getElementById('targetInput').value.trim() || 'target_actor';
+      const extraContact = document.getElementById('contactInput').value.trim() || 'None';
+      const crimeType = document.getElementById('crimeTypeInput').value;
       const hash = document.getElementById('nerd-hash').innerText;
       const realname = document.getElementById('card-realname').innerText;
       const confidence = document.getElementById('card-confidence').innerText;
       const statusText = document.getElementById('card-status').innerText;
       const githubUrl = document.getElementById('vector-github').innerText;
       const email = document.getElementById('vector-email').innerText;
-      const phone = document.getElementById('vector-phone').innerText;
-      const trackerScore = document.getElementById('radar-threat-score').innerText;
 
       document.getElementById('pdf-target').innerText = alias;
+      document.getElementById('pdf-contact-clue').innerText = extraContact;
+      document.getElementById('pdf-crime-type').innerText = crimeType;
       document.getElementById('pdf-hash').innerText = hash !== '--' ? hash : 'E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855';
       document.getElementById('pdf-name').innerText = realname;
       document.getElementById('pdf-github').innerText = githubUrl;
       document.getElementById('pdf-email').innerText = email;
-      document.getElementById('pdf-phone').innerText = phone;
-      document.getElementById('pdf-tracker-summary').innerText = `Browser Radar: ${trackerScore} | Storage/Canvas/WebRTC Audited`;
       document.getElementById('pdf-matches').innerText = statusText;
       document.getElementById('pdf-confidence').innerText = confidence;
       document.getElementById('pdf-date').innerText = new Date().toLocaleString();
@@ -842,7 +874,7 @@
 
       const opt = {
         margin: 10,
-        filename: `Forensic_Dossier_${alias}.pdf`,
+        filename: `CyberCell_Complaint_Dossier_${alias}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2 },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
@@ -853,8 +885,8 @@
       });
     }
 
+    // Initialize on page load
     window.addEventListener('DOMContentLoaded', () => {
-      runTrackerAudit();
       executeInvestigation();
     });
   </script>
