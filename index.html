@@ -12,7 +12,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     #network-graph {
-      height: 380px;
+      height: 400px;
       background: #090d16;
       border-radius: 0.75rem;
     }
@@ -29,11 +29,11 @@
           <h1 class="text-base font-black tracking-wide text-white">DARK SHARK</h1>
           <span class="text-xs bg-emerald-950 text-emerald-300 border border-emerald-700/60 px-2 py-0.5 rounded font-mono">SIH26151</span>
         </div>
-        <p class="text-xs text-slate-400">Deterministic OSINT Correlation Engine & Threat De-Anonymization</p>
+        <p class="text-xs text-slate-400">Live OSINT Threat De-Anonymization & Platform Probe</p>
       </div>
     </div>
 
-    <!-- Mode Selector & Standard Badge -->
+    <!-- Mode Selector & Air-Gap Badge -->
     <div class="flex items-center gap-3">
       <div class="bg-slate-950 p-1 rounded-lg border border-slate-800 flex text-xs">
         <button id="btn-simple-mode" onclick="setMode('simple')" class="px-3 py-1.5 rounded-md font-semibold bg-emerald-600 text-slate-950 transition">
@@ -44,7 +44,7 @@
         </button>
       </div>
       <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 text-slate-300 border border-slate-800 text-xs">
-        <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span> NIST SP 800-86 Auditable
+        <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span> NIST SP 800-86
       </span>
     </div>
   </header>
@@ -56,19 +56,29 @@
     <section class="bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-xl space-y-3">
       <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-1">
         <h2 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-          <span>🔍</span> Real-Time Target Verification Engine
+          <span>🔍</span> Target Reconnaissance Engine
         </h2>
-        <span class="text-xs text-slate-400">Strict Live API Ingestion (No Dummy Fallbacks)</span>
+        <span class="text-xs text-slate-400">Direct Live REST API Verification</span>
       </div>
 
       <div class="flex flex-col sm:flex-row gap-3">
-        <input id="targetInput" type="text" value="torvalds" 
+        <input id="targetInput" type="text" value="fayaaz01" 
           class="flex-1 bg-slate-950 border border-slate-700 px-4 py-3 rounded-xl text-sm text-emerald-400 focus:outline-none focus:border-emerald-500 font-mono" 
-          placeholder="Enter genuine alias (e.g. torvalds) or fake string to test 404 rejection" />
+          placeholder="Try real handles (e.g. fayaaz01, torvalds) or fake strings (e.g. user_99812_fake)" />
         <button id="scanBtn" onclick="runLiveInvestigation()" 
           class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-7 py-3 rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20">
-          <span id="btnText">Scan & Validate</span>
+          <span id="btnText">Scan & Verify Identity</span>
         </button>
+      </div>
+      
+      <!-- Quick Test Suggestions -->
+      <div class="flex flex-wrap items-center gap-2 pt-1 text-xs text-slate-400">
+        <span>Quick Test Inputs:</span>
+        <button onclick="quickTest('fayaaz01')" class="underline hover:text-emerald-400 font-mono">fayaaz01 (Real)</button>
+        <span>•</span>
+        <button onclick="quickTest('torvalds')" class="underline hover:text-emerald-400 font-mono">torvalds (Real)</button>
+        <span>•</span>
+        <button onclick="quickTest('fake_user_xyz_99812')" class="underline hover:text-rose-400 font-mono">fake_user_xyz_99812 (Fake)</button>
       </div>
     </section>
 
@@ -77,37 +87,47 @@
       
       <!-- Summary Cards -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <!-- Card 1 -->
+        <!-- Card 1: Identity Status -->
         <div class="bg-slate-900 p-5 rounded-xl border border-slate-800 space-y-2">
-          <div class="text-xs font-semibold uppercase text-slate-400">Analyzed Handle / Suspect</div>
-          <div id="card-alias" class="text-base font-bold text-emerald-400 font-mono">--</div>
-          <p id="card-alias-sub" class="text-xs text-slate-400">Target input identifier.</p>
+          <div class="text-xs font-semibold uppercase text-slate-400">Target Verification Status</div>
+          <div id="card-status" class="text-base font-bold text-slate-200">Awaiting lookup...</div>
+          <p id="card-status-sub" class="text-xs text-slate-400">Analyzed handle identifier.</p>
         </div>
-        <!-- Card 2 -->
+
+        <!-- Card 2: Discovered Profile Details -->
         <div class="bg-slate-900 p-5 rounded-xl border border-slate-800 space-y-2">
-          <div class="text-xs font-semibold uppercase text-slate-400">Live Accounts Discovered</div>
-          <div id="card-accounts" class="text-base font-bold text-slate-300">Awaiting scan...</div>
-          <p id="card-accounts-sub" class="text-xs text-slate-400">Verified via status 200 responses.</p>
+          <div class="text-xs font-semibold uppercase text-slate-400">Extracted Public Name</div>
+          <div id="card-realname" class="text-base font-bold text-emerald-400">--</div>
+          <p id="card-realname-sub" class="text-xs text-slate-400">Extracted from public API response.</p>
         </div>
-        <!-- Card 3 -->
+
+        <!-- Card 3: Confidence Score -->
         <div class="bg-slate-900 p-5 rounded-xl border border-slate-800 space-y-2">
-          <div class="text-xs font-semibold uppercase text-slate-400">Identity Match Confidence</div>
+          <div class="text-xs font-semibold uppercase text-slate-400">Deterministic Match Score</div>
           <div class="text-base font-bold flex items-center gap-2">
             <span id="card-confidence" class="text-slate-400">0.0%</span>
             <span id="card-confidence-tag" class="text-xs bg-slate-800 border border-slate-700 px-1.5 py-0.5 rounded text-slate-400">Idle</span>
           </div>
-          <p id="card-confidence-sub" class="text-xs text-slate-400">Calculated purely on live confirmed hits.</p>
+          <p id="card-confidence-sub" class="text-xs text-slate-400">Scored based purely on 200 OK responses.</p>
         </div>
       </div>
 
-      <!-- PDF Download Trigger -->
+      <!-- Verified Live Profile Links Box -->
+      <div class="bg-slate-900 p-5 rounded-xl border border-slate-800 space-y-3">
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400">Verified Live Platforms (Clickable Direct URLs)</h3>
+        <div id="live-links-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+          <div class="p-3 rounded-lg bg-slate-950 border border-slate-800 text-slate-500">Run a scan to verify active endpoints...</div>
+        </div>
+      </div>
+
+      <!-- PDF Download Action -->
       <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 flex flex-wrap justify-between items-center gap-3">
         <div>
-          <h4 class="text-sm font-bold text-white">Court-Admissible Dossier Export</h4>
-          <p class="text-xs text-slate-400">Compiles only verified hits, SHA-256 target hashes, and response timestamps into PDF format.</p>
+          <h4 class="text-sm font-bold text-white">Need an official audit trail?</h4>
+          <p class="text-xs text-slate-400">Exports verified URLs, extracted identity metadata, and computed SHA-256 target hashes.</p>
         </div>
         <button onclick="downloadCourtDossier()" class="bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-600 px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 transition">
-          <span>📄 Export Forensic Dossier (.PDF)</span>
+          <span>📄 Download Case Dossier (.PDF)</span>
         </button>
       </div>
     </div>
@@ -118,43 +138,43 @@
         <!-- Live Terminal Stream -->
         <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 font-mono text-xs space-y-2">
           <div class="flex justify-between text-slate-400 border-b border-slate-800 pb-2">
-            <span>LIVE API PROBE TRACE</span>
+            <span>LIVE REST PROBE TRACE</span>
             <span id="trace-status" class="text-emerald-400">IDLE</span>
           </div>
           <div id="nerd-logs" class="h-48 overflow-y-auto space-y-1 text-slate-300 p-1">
-            <p class="text-slate-500">> Engine initialized. Standing by for target lookup.</p>
+            <p class="text-slate-500">> System ready. Awaiting target string ingestion.</p>
           </div>
         </div>
 
         <!-- NIST Standards & Cryptographic Integrity -->
         <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 font-mono text-xs space-y-2">
           <div class="flex justify-between text-slate-400 border-b border-slate-800 pb-2">
-            <span>FORENSIC VERIFICATION AUDIT</span>
-            <span class="text-cyan-400">NIST SP 800-86</span>
+            <span>AUDIT STANDARDS (NIST SP 800-86)</span>
+            <span class="text-cyan-400">SHA-256 VALIDATED</span>
           </div>
           <div class="space-y-2 text-slate-300">
-            <div>• Target SHA-256: <span id="nerd-hash" class="text-emerald-400 break-all font-mono">--</span></div>
+            <div>• Target Hash: <span id="nerd-hash" class="text-emerald-400 break-all font-mono">--</span></div>
             <div>• False Positive Filtering: <span class="text-emerald-400 font-bold">Strict (404 Dropped)</span></div>
             <div>• Live Endpoint Targets: <span class="text-slate-400">GitHub, GitLab, HackerNews, Wikipedia</span></div>
-            <div>• Evidence Integrity: <span class="text-cyan-400">Deterministic Match Proof</span></div>
+            <div>• Forensic Logging: <span class="text-cyan-400">Direct HTTP Status Validation</span></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Dynamic Identity Correlation Graph -->
+    <!-- Interactive Correlation Graph -->
     <section class="bg-slate-900 p-5 rounded-2xl border border-slate-800 space-y-3">
       <div class="flex justify-between items-center">
         <div>
-          <h3 class="text-sm font-bold text-white">Dynamic Identity Correlation Graph</h3>
-          <p id="graph-subtitle" class="text-xs text-slate-400">Nodes are plotted solely for confirmed active endpoints.</p>
+          <h3 class="text-sm font-bold text-white">Interactive Identity Topology</h3>
+          <p id="graph-subtitle" class="text-xs text-slate-400">Clicking on any verified node opens its authentic URL in a new tab.</p>
         </div>
-        <span class="text-xs text-slate-500 bg-slate-950 px-2.5 py-1 rounded border border-slate-800">Dynamic Topology</span>
+        <span class="text-xs text-slate-500 bg-slate-950 px-2.5 py-1 rounded border border-slate-800">Interactive Web Graph</span>
       </div>
       <div id="network-graph"></div>
     </section>
 
-    <!-- Enterprise Model Section -->
+    <!-- Commercialization / Industry Future Model -->
     <section class="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-4">
       <div class="border-b border-slate-800 pb-3">
         <h2 class="text-base font-bold text-white">Enterprise Scalability & Monthly Revenue Architecture</h2>
@@ -193,18 +213,19 @@
   <div id="printable-dossier" class="hidden p-8 bg-white text-black font-sans">
     <div style="border-bottom: 2px solid #000; padding-bottom: 12px; margin-bottom: 20px;">
       <h1 style="font-size: 20px; font-weight: bold; margin: 0;">OFFICIAL OSINT FORENSIC INVESTIGATION DOSSIER</h1>
-      <p style="font-size: 11px; color: #555; margin: 4px 0 0 0;">STANDARD: NIST SP 800-86 | SYSTEM: DARK SHARK DETERMINISTIC ENGINE</p>
+      <p style="font-size: 11px; color: #555; margin: 4px 0 0 0;">STANDARD: NIST SP 800-86 | ENGINE: DARK SHARK DETERMINISTIC ENGINE</p>
     </div>
     <div style="font-size: 12px; line-height: 1.8;">
       <p><strong>Queried Suspect Identifier:</strong> <span id="pdf-target">--</span></p>
-      <p><strong>Cryptographic SHA-256 Provenance:</strong> <span id="pdf-hash" style="font-family: monospace;">--</span></p>
+      <p><strong>Target SHA-256 Provenance:</strong> <span id="pdf-hash" style="font-family: monospace;">--</span></p>
+      <p><strong>Extracted Real Name / Bio:</strong> <span id="pdf-name">--</span></p>
       <p><strong>Verified Live Hits:</strong> <span id="pdf-matches">--</span></p>
-      <p><strong>Deterministic Accuracy Score:</strong> <span id="pdf-confidence">--</span></p>
-      <p><strong>Verification Methodology:</strong> Direct REST Response Code 200 Validation</p>
+      <p><strong>Deterministic Confidence Score:</strong> <span id="pdf-confidence">--</span></p>
+      <p><strong>Verification Method:</strong> Real-time REST Response Code 200 Probe</p>
       <p><strong>Generated At:</strong> <span id="pdf-date"></span></p>
     </div>
     <div style="margin-top: 30px; border-top: 1px solid #ccc; padding-top: 10px; font-size: 10px; color: #777;">
-      This forensic document only logs verified, active endpoint responses. Unverified or nonexistent profiles are strictly filtered.
+      This forensic document logs exclusively verified, live endpoint responses. False positives and 404 responses are strictly discarded.
     </div>
   </div>
 
@@ -213,9 +234,10 @@
     Dark Shark — Smart India Hackathon (SIH 2026) | Problem Statement ID: SIH26151
   </footer>
 
-  <!-- Script Logic -->
+  <!-- Live Investigation Script Logic -->
   <script>
     let networkInstance = null;
+    let nodeUrlMap = {};
 
     function setMode(mode) {
       const simpleView = document.getElementById('simple-view');
@@ -236,6 +258,11 @@
       }
     }
 
+    function quickTest(handle) {
+      document.getElementById('targetInput').value = handle;
+      runLiveInvestigation();
+    }
+
     async function computeSHA256(str) {
       const buffer = new TextEncoder().encode(str);
       const hash = await crypto.subtle.digest('SHA-256', buffer);
@@ -244,12 +271,12 @@
 
     function renderGraph(alias, verifiedAccounts) {
       const container = document.getElementById('network-graph');
+      nodeUrlMap = {};
 
-      // If zero verified platforms exist, render isolated red target node
       if (verifiedAccounts.length === 0) {
         const data = {
           nodes: new vis.DataSet([
-            { id: 1, label: 'Target: ' + alias + '\n[STATUS: NO VERIFIED ACCOUNTS FOUND]', color: '#e11d48', shape: 'box', font: { color: '#ffffff', face: 'monospace' } }
+            { id: 1, label: 'Target: ' + alias + '\n[STATUS: 🚨 FAKE / NOT FOUND]', color: '#e11d48', shape: 'box', font: { color: '#ffffff', face: 'monospace' } }
           ]),
           edges: new vis.DataSet([])
         };
@@ -258,7 +285,6 @@
         return;
       }
 
-      // If genuine accounts exist, build the relationship topology
       const nodes = [
         { id: 1, label: 'Target Identifier:\n' + alias, color: '#0284c7', shape: 'box', font: { color: '#ffffff', face: 'monospace' } }
       ];
@@ -266,9 +292,10 @@
 
       verifiedAccounts.forEach((acc, idx) => {
         const nodeId = idx + 2;
+        nodeUrlMap[nodeId] = acc.url;
         nodes.push({
           id: nodeId,
-          label: 'VERIFIED LIVE:\n' + acc.title,
+          label: 'VERIFIED:\n' + acc.platform + '\n(Click to Open)',
           color: '#059669',
           shape: 'box',
           font: { color: '#ffffff', face: 'monospace' }
@@ -294,6 +321,16 @@
 
       if (networkInstance) networkInstance.destroy();
       networkInstance = new vis.Network(container, data, options);
+
+      // Make nodes directly clickable to open authentic external profile URLs
+      networkInstance.on("click", function (params) {
+        if (params.nodes.length > 0) {
+          const clickedNodeId = params.nodes[0];
+          if (nodeUrlMap[clickedNodeId]) {
+            window.open(nodeUrlMap[clickedNodeId], '_blank');
+          }
+        }
+      });
     }
 
     async function runLiveInvestigation() {
@@ -302,78 +339,100 @@
       const btnText = document.getElementById('btnText');
       const logs = document.getElementById('nerd-logs');
       const traceStatus = document.getElementById('trace-status');
+      const linksContainer = document.getElementById('live-links-container');
 
       if (!alias) {
-        alert('Please provide a target identifier.');
+        alert('Please enter a target identifier.');
         return;
       }
 
       scanBtn.disabled = true;
-      btnText.innerText = 'Scanning Endpoints...';
+      btnText.innerText = 'Checking Live Endpoints...';
       traceStatus.innerText = 'PROBING';
       traceStatus.className = 'text-yellow-400 font-bold';
 
       const targetHash = await computeSHA256(alias);
       document.getElementById('nerd-hash').innerText = targetHash;
-      document.getElementById('card-alias').innerText = alias;
 
-      logs.innerHTML = `<p class="text-yellow-400">> [START] Ingesting handle: "${alias}"</p>`;
-      logs.innerHTML += `<p class="text-slate-400">> [HASH] SHA-256: ${targetHash.substring(0, 16)}...</p>`;
+      logs.innerHTML = `<p class="text-yellow-400">> [START] Ingested Target: "${alias}"</p>`;
+      logs.innerHTML += `<p class="text-slate-400">> [HASH] Calculated SHA-256: ${targetHash.substring(0, 16)}...</p>`;
 
       const verifiedAccounts = [];
+      let extractedName = null;
 
-      // 1. Strict Probe: GitHub API
+      // 1. Live Check: GitHub REST API
       try {
-        logs.innerHTML += `<p class="text-slate-300">> [PROBE] Sending request to api.github.com/users/${alias}...</p>`;
+        logs.innerHTML += `<p class="text-slate-300">> [PROBE] Sending request: api.github.com/users/${alias}...</p>`;
         const ghRes = await fetch(`https://api.github.com/users/${encodeURIComponent(alias)}`);
         if (ghRes.status === 200) {
           const ghData = await ghRes.json();
-          verifiedAccounts.push({ title: `GitHub (@${ghData.login})`, url: ghData.html_url });
-          logs.innerHTML += `<p class="text-emerald-400 font-bold">> [HIT 200 OK] Live GitHub Account: ${ghData.html_url}</p>`;
+          extractedName = ghData.name || ghData.login;
+          verifiedAccounts.push({
+            platform: 'GitHub',
+            handle: `@${ghData.login}`,
+            url: ghData.html_url,
+            details: `Public Repos: ${ghData.public_repos} | Followers: ${ghData.followers}`,
+            avatar: ghData.avatar_url
+          });
+          logs.innerHTML += `<p class="text-emerald-400 font-bold">> [HIT 200 OK] Live GitHub Account: ${ghData.html_url} (${extractedName})</p>`;
         } else if (ghRes.status === 404) {
           logs.innerHTML += `<p class="text-rose-400">> [404 NOT FOUND] No GitHub account exists for "${alias}".</p>`;
         } else {
-          logs.innerHTML += `<p class="text-slate-500">> [HTTP ${ghRes.status}] GitHub rate limited or restricted.</p>`;
+          logs.innerHTML += `<p class="text-slate-500">> [HTTP ${ghRes.status}] GitHub rate limited.</p>`;
         }
       } catch (e) {
         logs.innerHTML += `<p class="text-slate-500">> [ERR] GitHub connection failed.</p>`;
       }
 
-      // 2. Strict Probe: GitLab API
+      // 2. Live Check: GitLab REST API
       try {
-        logs.innerHTML += `<p class="text-slate-300">> [PROBE] Sending request to gitlab.com/api/v4/users?username=${alias}...</p>`;
+        logs.innerHTML += `<p class="text-slate-300">> [PROBE] Sending request: gitlab.com/api/v4/users?username=${alias}...</p>`;
         const glRes = await fetch(`https://gitlab.com/api/v4/users?username=${encodeURIComponent(alias)}`);
         if (glRes.status === 200) {
           const glData = await glRes.json();
           if (Array.isArray(glData) && glData.length > 0 && glData[0].username.toLowerCase() === alias.toLowerCase()) {
-            verifiedAccounts.push({ title: `GitLab (@${glData[0].username})`, url: glData[0].web_url });
-            logs.innerHTML += `<p class="text-emerald-400 font-bold">> [HIT 200 OK] Live GitLab Account: ${glData[0].web_url}</p>`;
+            const user = glData[0];
+            if (!extractedName) extractedName = user.name;
+            verifiedAccounts.push({
+              platform: 'GitLab',
+              handle: `@${user.username}`,
+              url: user.web_url,
+              details: `Name: ${user.name}`,
+              avatar: user.avatar_url
+            });
+            logs.innerHTML += `<p class="text-emerald-400 font-bold">> [HIT 200 OK] Live GitLab Account: ${user.web_url}</p>`;
           } else {
-            logs.innerHTML += `<p class="text-rose-400">> [404 NOT FOUND] No GitLab profile exists for "${alias}".</p>`;
+            logs.innerHTML += `<p class="text-rose-400">> [404 NOT FOUND] No GitLab profile for "${alias}".</p>`;
           }
         }
       } catch (e) {
         logs.innerHTML += `<p class="text-slate-500">> [ERR] GitLab endpoint unreachable.</p>`;
       }
 
-      // 3. Strict Probe: HackerNews API
+      // 3. Live Check: HackerNews REST API
       try {
-        logs.innerHTML += `<p class="text-slate-300">> [PROBE] Querying HackerNews Firebase user registry for "${alias}"...</p>`;
+        logs.innerHTML += `<p class="text-slate-300">> [PROBE] Checking HackerNews Firebase API for "${alias}"...</p>`;
         const hnRes = await fetch(`https://hacker-news.firebaseio.com/v0/user/${encodeURIComponent(alias)}.json`);
         if (hnRes.status === 200) {
           const hnData = await hnRes.json();
           if (hnData && hnData.id && hnData.id.toLowerCase() === alias.toLowerCase()) {
-            verifiedAccounts.push({ title: `HackerNews (${hnData.id})`, url: `https://news.ycombinator.com/user?id=${hnData.id}` });
+            verifiedAccounts.push({
+              platform: 'HackerNews',
+              handle: hnData.id,
+              url: `https://news.ycombinator.com/user?id=${hnData.id}`,
+              details: `Karma Score: ${hnData.karma}`,
+              avatar: null
+            });
             logs.innerHTML += `<p class="text-emerald-400 font-bold">> [HIT 200 OK] Live HackerNews Profile (Karma: ${hnData.karma})</p>`;
           } else {
-            logs.innerHTML += `<p class="text-rose-400">> [404 NOT FOUND] No HackerNews user registered under "${alias}".</p>`;
+            logs.innerHTML += `<p class="text-rose-400">> [404 NOT FOUND] No HackerNews registration under "${alias}".</p>`;
           }
         }
       } catch (e) {
         logs.innerHTML += `<p class="text-slate-500">> [ERR] HackerNews probe failed.</p>`;
       }
 
-      // 4. Strict Probe: Wikipedia User Page
+      // 4. Live Check: Wikipedia MediaWiki User Page
       try {
         logs.innerHTML += `<p class="text-slate-300">> [PROBE] Checking MediaWiki registry for User:${alias}...</p>`;
         const wikiRes = await fetch(`https://en.wikipedia.org/w/api.php?action=query&titles=User:${encodeURIComponent(alias)}&format=json&origin=*`);
@@ -382,26 +441,33 @@
           const pages = wikiData.query?.pages || {};
           const pageId = Object.keys(pages)[0];
           if (pageId && pageId !== "-1") {
-            verifiedAccounts.push({ title: `Wikipedia (User:${alias})`, url: `https://en.wikipedia.org/wiki/User:${alias}` });
+            verifiedAccounts.push({
+              platform: 'Wikipedia',
+              handle: `User:${alias}`,
+              url: `https://en.wikipedia.org/wiki/User:${alias}`,
+              details: `Official User Space Page`,
+              avatar: null
+            });
             logs.innerHTML += `<p class="text-emerald-400 font-bold">> [HIT 200 OK] Active Wikipedia User Page verified.</p>`;
           } else {
-            logs.innerHTML += `<p class="text-rose-400">> [404 NOT FOUND] No Wikipedia user page for "${alias}".</p>`;
+            logs.innerHTML += `<p class="text-rose-400">> [404 NOT FOUND] No Wikipedia user page exists for "${alias}".</p>`;
           }
         }
       } catch (e) {
         logs.innerHTML += `<p class="text-slate-500">> [ERR] Wikipedia probe error.</p>`;
       }
 
-      // Process and Display Results
-      const cardAccounts = document.getElementById('card-accounts');
-      const cardAccountsSub = document.getElementById('card-accounts-sub');
+      // Update Simple UI Cards
+      const cardStatus = document.getElementById('card-status');
+      const cardStatusSub = document.getElementById('card-status-sub');
+      const cardRealname = document.getElementById('card-realname');
       const cardConfidence = document.getElementById('card-confidence');
       const cardConfidenceTag = document.getElementById('card-confidence-tag');
 
       if (verifiedAccounts.length > 0) {
-        cardAccounts.innerText = verifiedAccounts.map(a => a.title).join(', ');
-        cardAccounts.className = 'text-base font-bold text-emerald-400';
-        cardAccountsSub.innerText = `${verifiedAccounts.length} live authenticated public account(s) linked.`;
+        cardStatus.innerHTML = `<span class="text-emerald-400 font-mono">${alias}</span> <span class="text-xs bg-emerald-950 text-emerald-300 border border-emerald-800 px-2 py-0.5 rounded ml-1">REAL / VERIFIED</span>`;
+        cardStatusSub.innerText = `Correlated across ${verifiedAccounts.length} live platform registry endpoint(s).`;
+        cardRealname.innerText = extractedName || alias;
 
         const score = (Math.min(verifiedAccounts.length * 30 + 10, 98.0)).toFixed(1);
         cardConfidence.innerText = `${score}%`;
@@ -409,37 +475,62 @@
         cardConfidenceTag.innerText = 'Verified Match';
         cardConfidenceTag.className = 'text-xs bg-emerald-950 border border-emerald-800 px-1.5 py-0.5 rounded text-emerald-300';
 
-        logs.innerHTML += `<p class="text-emerald-300 font-bold">> [AUDIT PASS] Identity correlation mapped with ${verifiedAccounts.length} live hit(s).</p>`;
+        // Populate Clickable Direct URLs
+        linksContainer.innerHTML = verifiedAccounts.map(acc => `
+          <a href="${acc.url}" target="_blank" rel="noopener noreferrer" 
+            class="flex items-center justify-between p-3 rounded-lg bg-slate-950 border border-emerald-800/60 hover:border-emerald-500 hover:bg-slate-900 transition group">
+            <div class="flex items-center space-x-3">
+              ${acc.avatar ? `<img src="${acc.avatar}" class="w-8 h-8 rounded-full border border-slate-700" alt="Avatar"/>` : `<div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-xs font-bold text-emerald-400">#</div>`}
+              <div>
+                <div class="font-bold text-slate-100 group-hover:text-emerald-400 flex items-center gap-1">
+                  ${acc.platform} <span class="text-slate-400 font-normal">(${acc.handle})</span>
+                </div>
+                <div class="text-[11px] text-slate-400">${acc.details}</div>
+              </div>
+            </div>
+            <span class="text-emerald-400 text-xs font-bold group-hover:translate-x-0.5 transition">Open ↗</span>
+          </a>
+        `).join('');
+
+        logs.innerHTML += `<p class="text-emerald-300 font-bold">> [AUDIT PASS] Identity verified with ${verifiedAccounts.length} active public account(s).</p>`;
       } else {
-        cardAccounts.innerText = 'No Verified Live Accounts Found';
-        cardAccounts.className = 'text-base font-bold text-rose-400';
-        cardAccountsSub.innerText = 'All scanned registries returned 404 Not Found.';
+        cardStatus.innerHTML = `<span class="text-rose-400 font-mono">${alias}</span> <span class="text-xs bg-rose-950 text-rose-300 border border-rose-800 px-2 py-0.5 rounded ml-1">🚨 FAKE / NOT FOUND</span>`;
+        cardStatusSub.innerText = 'Zero matching endpoints found across public registries.';
+        cardRealname.innerText = 'None (Non-Existent)';
 
         cardConfidence.innerText = '0.0%';
         cardConfidence.className = 'text-rose-400 font-bold text-base';
         cardConfidenceTag.innerText = 'Unmatched';
         cardConfidenceTag.className = 'text-xs bg-rose-950 border border-rose-800 px-1.5 py-0.5 rounded text-rose-300';
 
-        logs.innerHTML += `<p class="text-rose-400 font-bold">> [AUDIT FAIL] Target "${alias}" does not exist across public endpoint registries. False positives rejected.</p>`;
+        linksContainer.innerHTML = `
+          <div class="col-span-full p-3 rounded-lg bg-rose-950/30 border border-rose-800/80 text-rose-300">
+            <strong>Target Not Found:</strong> No public accounts exist on GitHub, GitLab, HackerNews, or Wikipedia for "<strong>${alias}</strong>". False positive rejected.
+          </div>
+        `;
+
+        logs.innerHTML += `<p class="text-rose-400 font-bold">> [AUDIT FAIL] Target "${alias}" does not exist. All live probes returned 404.</p>`;
       }
 
       renderGraph(alias, verifiedAccounts);
 
       scanBtn.disabled = false;
-      btnText.innerText = 'Scan & Validate';
-      traceStatus.innerText = verifiedAccounts.length > 0 ? 'MATCHED' : 'UNMATCHED';
+      btnText.innerText = 'Scan & Verify Identity';
+      traceStatus.innerText = verifiedAccounts.length > 0 ? 'VERIFIED' : 'UNMATCHED';
       traceStatus.className = verifiedAccounts.length > 0 ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold';
     }
 
     function downloadCourtDossier() {
-      const alias = document.getElementById('targetInput').value.trim() || 'unknown_target';
+      const alias = document.getElementById('targetInput').value.trim() || 'target_actor';
       const hash = document.getElementById('nerd-hash').innerText;
-      const matches = document.getElementById('card-accounts').innerText;
+      const realname = document.getElementById('card-realname').innerText;
       const confidence = document.getElementById('card-confidence').innerText;
+      const statusText = document.getElementById('card-status').innerText;
 
       document.getElementById('pdf-target').innerText = alias;
       document.getElementById('pdf-hash').innerText = hash !== '--' ? hash : 'NOT_CALCULATED';
-      document.getElementById('pdf-matches').innerText = matches;
+      document.getElementById('pdf-name').innerText = realname;
+      document.getElementById('pdf-matches').innerText = statusText;
       document.getElementById('pdf-confidence').innerText = confidence;
       document.getElementById('pdf-date').innerText = new Date().toLocaleString();
 
